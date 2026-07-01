@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>VK Mini App Token</title>
+    <script src="https://vk.com/js/api/bridge/vkbridge.js"></script>
+  </head>
+  <body>
+    <h1>Получение токена для опросов</h1>
+    <button id="btn">Получить токен</button>
+    <p>Токен появится в консоли (F12) и во всплывающем окне.</p>
+
+    <script>
+      VKBridge.send('VKWebAppInit');
+
+      document.getElementById('btn').addEventListener('click', () => {
+        VKBridge.send('VKWebAppGetAuthToken', {
+          group_id: 12345678, // <-- ВСТАВЬ СЮДА ID СВОЕГО СООБЩЕСТВА (только цифры)
+          scope: 'wall,polls,offline'
+        });
+      });
+
+      VKBridge.on('VKWebAppGetAuthTokenResult', (e) => {
+        const token = e.detail.access_token;
+        console.log('ТОКЕН ДЛЯ N8N:', token);
+        alert('Скопируй токен из консоли (F12):\n' + token);
+      });
+
+      VKBridge.on('VKWebAppError', (e) => {
+        console.error('Ошибка VK Bridge:', e);
+        alert('Ошибка: ' + JSON.stringify(e.detail));
+      });
+    </script>
+  </body>
+</html>
